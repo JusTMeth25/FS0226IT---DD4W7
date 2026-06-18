@@ -112,21 +112,6 @@ function renderLibri() {
   document.getElementById("contatore").textContent = libriFiltrati.length;
 }
 
-// === Mostra / nasconde campo dimensione ===
-// document.getElementById("formato").addEventListener("change", (e) => {
-//   if (e.target.value === "digitale") {
-//     document.getElementById("campo-dimensione").removeAttribute("hidden");
-//   } else {
-//     document.getElementById("campo-dimensione").setAttribute("hidden", "");
-//   }
-
-//   if (e.target.value === "audio") {
-//     document.getElementById("campo-durata").removeAttribute("hidden");
-//   } else {
-//     document.getElementById("campo-durata").setAttribute("hidden", "");
-//   }
-// });
-
 // === Filtro ===
 document.getElementById("filter-all").addEventListener("click", () => {
   filtroAttuale = "tutti";
@@ -152,35 +137,6 @@ document.getElementById("ordina").addEventListener("change", (e) => {
   salvaLibri();
   renderLibri();
 });
-
-// === Submit form ===
-// document.getElementById("aggiungi-libro").addEventListener("submit", (e) => {
-//   e.preventDefault();
-
-//   const titolo = e.target.titolo.value;
-//   const autore = e.target.autore.value;
-//   const anno = parseInt(e.target.anno.value);
-//   const formato = e.target.formato.value;
-//   const dimensioneMb = parseFloat(e.target.dimensione.value) || 0;
-//   const durataMinuti = parseInt(e.target.durata.value) || 0;
-
-//   let nuovoLibro;
-
-//   if (formato === "digitale") {
-//     nuovoLibro = new LibroDigitale(titolo, autore, anno, dimensioneMb);
-//   } else if (formato === "audio") {
-//     nuovoLibro = new LibroAudio(titolo, autore, anno, durataMinuti);
-//   } else {
-//     nuovoLibro = new Libro(titolo, autore, anno);
-//   }
-
-//   libri.push(nuovoLibro);
-//   salvaLibri();
-//   renderLibri();
-
-//   e.target.reset();
-//   document.getElementById("campo-dimensione").setAttribute("hidden", "");
-// });
 
 // === Event delegation lista libri ===
 document.getElementById("lista-libri").addEventListener("click", (e) => {

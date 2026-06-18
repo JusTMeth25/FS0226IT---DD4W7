@@ -236,9 +236,14 @@ li {
   list-style: none;
 }
 
-.header-row {
+
+.site-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
+}
+
+.header-row {
+  display:flex;
 }
 
 .auth-box {
@@ -250,7 +255,7 @@ li {
   border: none;
   width: 200px;
   display: flex;
-  flex: 1 0 0;
+  justify-content: flex-end;
 }
 
 .btn-logout {
