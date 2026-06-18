@@ -242,31 +242,111 @@ function nascondiSpinner() {
   spinner.classList.remove("errore");
 }
 
-function mostraErrore() {
+function mostraErrore(messaggio = "Errore durante il caricamento dei libri") {
   const errore = document.getElementById("errore");
-  errore.textContent = "Errore durante il caricamento dei libri";
+  errore.textContent = messaggio;
   errore.classList.remove("hidden");
 }
 
-function cerca(query) {
+async function cerca(query) {
   mostraSpinner();
-  const url = `https://openlibrary.org/search.json?q=${query}&limit=10`;
-  fetch(url)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Errore HTTP + response.status");
-      }
-      return response.json();
-    })
-    .then((dati) => {
-      renderRisultati(dati.docs);
-    })
-    .catch((err) => {
-      mostraErrore("Impossibile completare la ricerca: " + err.message);
-    })
-    .finally(() => {
-      nascondiSpinner();
+  try {
+    const r = await fetch(
+      `https://openlibrary.org/search.json?q=${query}&limit=10`,
+    );
+    if (!r.ok) {
+      throw new Error("Errore HTTP " + r.status);
+    }
+    const dati = await r.json();
+    renderRisultati(dati.docs);
+  } catch (err) {
+    mostraErrore("Impossibile completare la ricerca: " + err.message);
+  } finally {
+    nascondiSpinner();
+  }
+}
+
+// === Funzioni autenticazione ===
+function getToken() {
+  return localStorage.getItem("auth.token");
+}
+
+function getUtente() {
+  const utenteSalvato = localStorage.getItem("auth.user");
+  if (!utenteSalvato) return null;
+  try {
+    return JSON.parse(utenteSalvato);
+  } catch {
+    return null;
+  }
+}
+
+function logout() {
+  localStorage.removeItem("auth.token");
+  localStorage.removeItem("auth.user");
+  document.getElementById("profilo-section").setAttribute("hidden", "");
+}
+
+async function login(username, password) {
+  const r = await fetch("https://dummyjson.com/auth/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username, password }),
+  });
+
+  if (!r.ok) {
+    throw new Error("Credenziali non valide");
+  }
+
+  const dati = await r.json();
+  const token = dati.token || dati.accessToken;
+
+  localStorage.setItem("auth.token", token);
+  localStorage.setItem("auth.user", JSON.stringify(dati));
+
+  return dati;
+}
+
+async function caricaProfilo() {
+  const token = getToken();
+  if (!token) return null;
+}
+
+function renderAuthBox() {
+  const utente = getUtente();
+  const authBox = document.getElementById("auth-box");
+  if (utente) {
+    authBox.innerHTML = `<span class="saluto">Ciao ${utente.firstName}</span>
+      <button class="btn-logout" id="btn-logout">Esci</button>`;
+
+    document.getElementById("btn-logout").addEventListener("click", () => {
+      logout();
+      renderAuthBox();
     });
+  } else {
+    authBox.innerHTML = `<form id="form-login">
+    <input type="text" name:"username" placeholder="Username" required>
+    <input type="password" name:"password" placeholder="Password" required>
+    <button type="submit">Accedi</button>
+    </form>`;
+
+    document.getElementById("form-login").addEventListener(gestisciLogin);
+  }
+}
+
+async function gestisciLogin(e) {
+  e.preventDefault();
+  const form = e.target;
+  const username = form.username.value;
+  const password = form.password.value;
+
+  try {
+    const utente = await login(username, password);
+    renderAuthBox();
+    await mostraProfilo();
+  } catch (err) {
+    mostraErrore("Impossibile effettuare il login: " + err.message);
+  }
 }
 
 function renderRisultati(docs) {
