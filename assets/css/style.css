@@ -237,30 +237,76 @@ li {
 }
 
 
-.site-header {
-  display: flex;
-  justify-content: flex-start;
-}
-
 .header-row {
-  display:flex;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
 }
 
 .auth-box {
-  margin: 10px 0;
-  padding: 10px 0;
-  background: rgba(255, 255, 255, 0.071);
-  border: 1px solid #ccc;
-  border-radius: 15px;
-  border: none;
-  width: 200px;
-  display: flex;
-  justify-content: flex-end;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 12px 16px;
+  border-radius: 6px;
+  min-width: 260px;
 }
 
-.btn-logout {
-  background-color: rgba(255, 0, 0, 0.836);
+.auth-box form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.auth-box input {
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  width: 110px;
+}
+
+.auth-box .btn-login,
+.auth-box .btn-logout {
+  background: hsl(140, 50%, 35%);
   color: white;
-  border-radius: 5px;
-  width: 70px;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.auth-box .btn-logout {
+  background: #c44;
+}
+
+.auth-box .saluto {
+  font-weight: bold;
+  margin-right: 8px;
+}
+
+.profilo-section {
+  background: white;
+  padding: 20px 24px;
+  margin-top: 20px;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.profilo {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.profilo img {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+}
+
+.profilo .info p {
+  margin: 2px 0;
 }
