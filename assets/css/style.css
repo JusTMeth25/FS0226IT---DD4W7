@@ -235,3 +235,27 @@ body {
 li {
   list-style: none;
 }
+
+.header-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.auth-box {
+  margin: 10px 0;
+  padding: 10px 0;
+  background: rgba(255, 255, 255, 0.071);
+  border: 1px solid #ccc;
+  border-radius: 15px;
+  border: none;
+  width: 200px;
+  display: flex;
+  flex: 1 0 0;
+}
+
+.btn-logout {
+  background-color: rgba(255, 0, 0, 0.836);
+  color: white;
+  border-radius: 5px;
+  width: 70px;
+}

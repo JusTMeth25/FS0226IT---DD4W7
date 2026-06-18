@@ -310,6 +310,21 @@ async function login(username, password) {
 async function caricaProfilo() {
   const token = getToken();
   if (!token) return null;
+
+  try {
+    const r = await fetch("https://dummyjson.com/auth/me", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!r.ok) {
+      throw new Error("Errore HTTP" + r.status);
+    }
+    const utente = await r.json();
+    localStorage.setItem("auth.user", JSON.stringify(utente));
+    return utente;
+  } catch (err) {
+    mostraErrore("Impossibile caricare il profilo: " + err.message);
+    return null;
+  }
 }
 
 function renderAuthBox() {
@@ -325,12 +340,14 @@ function renderAuthBox() {
     });
   } else {
     authBox.innerHTML = `<form id="form-login">
-    <input type="text" name:"username" placeholder="Username" required>
-    <input type="password" name:"password" placeholder="Password" required>
+    <input type="text" name="username" placeholder="Username" required>
+    <input type="password" name="password" placeholder="Password" required>
     <button type="submit">Accedi</button>
     </form>`;
 
-    document.getElementById("form-login").addEventListener(gestisciLogin);
+    document
+      .getElementById("form-login")
+      .addEventListener("submit", gestisciLogin);
   }
 }
 
@@ -347,6 +364,31 @@ async function gestisciLogin(e) {
   } catch (err) {
     mostraErrore("Impossibile effettuare il login: " + err.message);
   }
+}
+
+async function mostraProfilo() {
+  if (!getToken()) {
+    return;
+  }
+  try {
+    const profilo = await caricaProfilo();
+    if (!profilo) return;
+    document.getElementById("profilo").innerHTML =
+      `<img src="${profilo.image}"> 
+      <div class="info">
+        <p><strong>${profilo.firstName} ${profilo.lastName}</strong></p>
+        <p>${profilo.username} - ${profilo.email}</p>
+        </div>`;
+    document.getElementById("profilo-section").removeAttribute("hidden");
+  } catch (err) {
+    mostraErrore("Impossibile caricare il profilo: " + err.message);
+  }
+}
+
+async function avvio() {
+  renderLibri();
+  renderAuthBox();
+  await mostraProfilo();
 }
 
 function renderRisultati(docs) {
@@ -450,3 +492,4 @@ if (ultimaQuery) {
 }
 
 renderLibri();
+avvio();
